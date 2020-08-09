@@ -1,0 +1,111 @@
+﻿@model AuthProject.ViewModels.RegisterModel
+
+@{
+    ViewData["Title"] = "Регистрация";
+    Layout = "~/Views/Shared/_NoHeaderLayout.cshtml";
+}
+
+@section Styles{
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @@media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+    <link href="/lib/bootstrap/dist/css/floating-labels.css" rel="stylesheet">
+
+}
+
+<form class="form-signin" id="RegisterForm" asp-action="Register" asp-controller="Account" asp-anti-forgery="true">
+
+    <div class="validation" asp-validation-summary="ModelOnly"></div>
+
+    <div class="text-center mb-4">
+        <h1 class="h3 mb-3 font-weight-normal">Регистрация</h1>
+        <p>Введите пожалуйста данные в форму</p>
+    </div>
+
+    <div class="form-label-group">
+        <input type="email" asp-for="Email" id="Email" class="form-control" placeholder="Email адрес" required autofocus>
+        <label for="Email">Email адрес</label>
+        <span asp-validation-for="Email" />
+    </div>
+
+
+    <div class="form-label-group">
+        <input type="password" asp-for="Password" id="Password" class="form-control" placeholder="Ваш пароль" required>
+        <label for="Password">Пароль</label>
+        <span asp-validation-for="Password" />
+    </div>
+    <div class="form-label-group">
+        <input type="password" asp-for="ConfirmPassword" id="ConfirmPassword" class="form-control" placeholder="Подвердите Ваш пароль" required>
+        <label for="ConfirmPassword">Подтвердите пароль</label>
+        <span asp-validation-for="ConfirmPassword" />
+    </div>
+
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" value="remember-me"> Запомнить меня
+        </label>
+
+        <p class="mt-4 mb-3 text-muted text-center">Уже есть аккаунт? Нажмите <a asp-action="Login" asp-controller="Account">Войти</a></p>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" id="registerBTN" type="submit">Зарегистрироваться</button>
+    <p class="mt-3 mb-3 text-muted text-center">Супер сайт &copy; 2020</p>
+</form>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+@*<script>
+        $('#registerBTN').on('click', function () {
+            debugger;
+            var model = $('#RegisterForm').serialize();
+            $.ajax({
+                url: '@Url.Action("Register", "Account")',
+                data: { model: model },
+                success: function (result) {
+                    if (result.success) {
+                        Swal.fire(
+                            'Good job!',
+                            'You clicked the button!',
+                            'success'
+                        )
+                    }
+                    else {
+                        console.log(result.message);
+                    }
+                }
+            })
+        })
+    </script>*@
+
+@*<script>
+        $('#registerBTN').on('click', function (e) {
+            e.preventDefault();
+            Swal.fire(
+                'Good job!',
+                'You clicked the button!',
+                'success'
+            ).then(() => {
+                $('RegisterForm').submit();
+            });
+        }
+    </script>*@
+
+<script>
+    $('#registerBTN').on('click', function () {
+        $.ajax().success(Swal.fire(
+            'Good job!',
+            'You clicked the button!',
+            'success'
+        ))
+    })
+</script>

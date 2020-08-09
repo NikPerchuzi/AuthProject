@@ -1,0 +1,38 @@
+﻿@model AuthProject.Models.Product
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_NoHeaderLayout.cshtml";
+}
+
+<h1>Подробная информация</h1>
+
+<div>
+    <h4>Продукт</h4>
+    <p class="text-success">//сделал на перед чтобы выводить дополнительную информацию которая не поместилась в таблице</p>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Count)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Count)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Редактировать</a> |
+    <a asp-action="Index" class="btn btn-outline-success">Назад к списку</a>
+</div>
