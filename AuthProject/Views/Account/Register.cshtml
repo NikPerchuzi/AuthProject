@@ -60,52 +60,39 @@
 
         <p class="mt-4 mb-3 text-muted text-center">Уже есть аккаунт? Нажмите <a asp-action="Login" asp-controller="Account">Войти</a></p>
     </div>
-    <button class="btn btn-lg btn-primary btn-block" id="registerBTN" type="submit">Зарегистрироваться</button>
+    <button class="btn btn-lg btn-primary btn-block" id="registerBTN" type="button">Зарегистрироваться</button>
     <p class="mt-3 mb-3 text-muted text-center">Супер сайт &copy; 2020</p>
 </form>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-@*<script>
+
+@section Scripts {
+    <script>
         $('#registerBTN').on('click', function () {
-            debugger;
             var model = $('#RegisterForm').serialize();
             $.ajax({
                 url: '@Url.Action("Register", "Account")',
-                data: { model: model },
+                method: 'POST',
+                data: model,
                 success: function (result) {
                     if (result.success) {
-                        Swal.fire(
-                            'Good job!',
-                            'You clicked the button!',
-                            'success'
-                        )
+                        Swal.fire({
+                            title: 'Успешно!',
+                            text: result.message,
+                            icon: 'success',
+                            timer: 3000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '@Url.Action("Login", "Account")';
+                        });
                     }
                     else {
-                        console.log(result.message);
+                        Swal.fire({
+                            title: 'Ошибка',
+                            text: result.message,
+                            icon: 'error',
+                        });
                     }
                 }
             })
         })
-    </script>*@
-
-@*<script>
-        $('#registerBTN').on('click', function (e) {
-            e.preventDefault();
-            Swal.fire(
-                'Good job!',
-                'You clicked the button!',
-                'success'
-            ).then(() => {
-                $('RegisterForm').submit();
-            });
-        }
-    </script>*@
-
-<script>
-    $('#registerBTN').on('click', function () {
-        $.ajax().success(Swal.fire(
-            'Вы успешно зарегистрированы!',
-            'Скоро Вы будете перенаправлены на главную старницу.',
-            'success'
-        ))
-    })
-</script>
+    </script>
+}

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AuthProject.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private UserContext db;
         public AccountController(UserContext context)
@@ -22,7 +22,11 @@ namespace AuthProject.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return View();
+            if (Anonymous)
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Products");
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -43,8 +47,13 @@ namespace AuthProject.Controllers
         }
 
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult Register(bool redirectToMain = false)
         {
+            if (redirectToMain)
+            {
+                return RedirectToAction("Index", "Products");
+            }
+
             return View();
         }
 
@@ -52,6 +61,7 @@ namespace AuthProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model)
         {
+            var result = new ResultVM();
             if (ModelState.IsValid)
             {
                 User user = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
@@ -62,16 +72,22 @@ namespace AuthProject.Controllers
                     db.Users.Add(newUser);
                     await db.SaveChangesAsync();
 
-                    await Authenticate(model.Email, newUser.Id); // аутентификация
+                   // await Authenticate(model.Email, newUser.Id); // аутентификация
 
-                    return RedirectToAction("Index", "Products");
+                    result.Success = true;
+                    result.Message = "Вы успешно зарегистрировались";
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                    result.Message = "Такой пользователь уже существует";
                 }
             }
-            return View(model);
+            else
+            {
+                result.Message = "Проверьте правильность ввода логина или пароля!";
+            }
+
+            return Json(result);
         }
 
         private async Task Authenticate(string userName, int userId)

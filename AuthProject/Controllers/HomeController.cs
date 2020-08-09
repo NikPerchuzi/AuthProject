@@ -22,7 +22,7 @@ namespace AuthProject.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            return Content(User.Identity.Name);
+            return RedirectToAction("Index", "Products");
         }
 
         //public IActionResult Index()
