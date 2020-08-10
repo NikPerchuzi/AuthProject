@@ -71,9 +71,7 @@ namespace AuthProject.Controllers
                     var newUser = new User { Email = model.Email, Password = model.Password };
                     db.Users.Add(newUser);
                     await db.SaveChangesAsync();
-
                    // await Authenticate(model.Email, newUser.Id); // аутентификация
-
                     result.Success = true;
                     result.Message = "Вы успешно зарегистрировались";
                 }
@@ -86,7 +84,6 @@ namespace AuthProject.Controllers
             {
                 result.Message = "Проверьте правильность ввода логина или пароля!";
             }
-
             return Json(result);
         }
 

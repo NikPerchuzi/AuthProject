@@ -23,7 +23,8 @@ namespace AuthProject.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Products.Where(x => x.UserId == UserId).ToListAsync());
+            var model = await _context.Products.Where(x => x.UserId == UserId).ToListAsync();
+            return View(model);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -59,6 +60,7 @@ namespace AuthProject.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(product);
         }
 
@@ -110,31 +112,24 @@ namespace AuthProject.Controllers
             return View(product);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
+            var result = new ResultVM();
+            try
             {
-                return NotFound();
-            }
+                var product = await _context.Products.FirstOrDefaultAsync(m => m.Id == id && m.UserId == UserId);
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
 
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+                result.Success = true;
+                result.Message = "Товар успешно удален.";
+            }
+            catch (Exception)
             {
-                return NotFound();
+                result.Message = "Произошла ошибка!";
             }
-
-            return View(product);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var product = await _context.Products.FindAsync(id);
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(result);
         }
 
         private bool ProductExists(int id)
