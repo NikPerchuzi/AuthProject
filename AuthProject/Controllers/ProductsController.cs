@@ -94,12 +94,14 @@ namespace AuthProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,Count")] Product product)
+        public async Task<IActionResult> Edit(Product product)
         {
-            if (id != product.Id)
-            {
-                return NotFound();
-            }
+
+            var result = new ResultVM();
+            //if (id != product.Id)
+            //{
+            //    return NotFound();
+            //}
 
             if (ModelState.IsValid)
             {
@@ -108,21 +110,26 @@ namespace AuthProject.Controllers
                     product.UserId = UserId.Value;
                     _context.Update(product);
                     await _context.SaveChangesAsync();
+
+                    result.Success = true;
+                    result.Message = "Товар успешно изменен";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ProductExists(product.Id))
                     {
-                        return NotFound();
+                        result.Success = false;
+                        result.Message = "Ошибка что-то пошло не так.";
+                        
                     }
                     else
                     {
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Json(result); ;
             }
-            return View(product);
+            return Json(result);
         }
 
         [HttpPost]

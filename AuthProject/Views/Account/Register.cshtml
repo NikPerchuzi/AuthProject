@@ -67,6 +67,7 @@
 @section Scripts {
     <script>
         $('#registerBTN').on('click', function () {
+            debugger;
             var model = $('#RegisterForm').serialize();
             $.ajax({
                 url: '@Url.Action("Register", "Account")',
@@ -74,6 +75,7 @@
                 data: model,
                 success: function (result) {
                     if (result.success) {
+                        debugger;
                         Swal.fire({
                             title: 'Успешно!',
                             text: result.message,
