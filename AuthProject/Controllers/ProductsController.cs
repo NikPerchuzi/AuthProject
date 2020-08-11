@@ -53,15 +53,28 @@ namespace AuthProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Price,Count")] Product product)
         {
-            if (ModelState.IsValid)
+            var result = new ResultVM();
+            try
             {
-                product.UserId = UserId.Value;
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    product.UserId = UserId.Value;
+                    _context.Add(product);
+                    await _context.SaveChangesAsync();
+                    result.Success = true;
+                    result.Message = "Товар успешно создан.";
+                }
+                else
+                {
+                    result.Message = "Данные в полях не верны!";
+                }
             }
 
-            return View(product);
+            catch (Exception)
+            {
+                result.Message = "Произошла ошибка!";
+            }
+            return Json(result);
         }
 
         public async Task<IActionResult> Edit(int? id)
